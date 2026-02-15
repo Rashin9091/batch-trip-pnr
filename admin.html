@@ -6,6 +6,7 @@
 <body>
 
 <h2>Add PNR</h2>
+
 <input type="text" id="pnrInput" placeholder="Enter 10 digit PNR">
 <button onclick="addPNR()">Add</button>
 
@@ -15,7 +16,9 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
 import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
-  // PASTE CONFIG
+  apiKey: "YOUR_KEY",
+  authDomain: "YOUR_DOMAIN",
+  projectId: "YOUR_PROJECT_ID",
 };
 
 const app = initializeApp(firebaseConfig);
@@ -23,11 +26,19 @@ const db = getFirestore(app);
 
 async function addPNR() {
   const pnr = document.getElementById("pnrInput").value;
+
+  if(pnr.length !== 10) {
+    alert("Invalid PNR");
+    return;
+  }
+
   await addDoc(collection(db, "pnrs"), {
     pnr: pnr,
-    status: "Pending..."
+    lastUpdated: null,
+    status: "Checking..."
   });
-  alert("PNR Added!");
+
+  alert("PNR Added Successfully!");
 }
 
 window.addPNR = addPNR;
